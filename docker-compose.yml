@@ -1,0 +1,37 @@
+version: '3.7'
+
+services:
+  nextcloud:
+    container_name: cloud-nextcloud
+    image: nextcloud:fpm
+    restart: always
+    ports:
+      - 20000:9000
+    networks:
+      - web
+    volumes:
+      - cloud-nextcloud-data:/var/www/html
+    environment:
+      - MYSQL_DATABASE=nextcloud
+      - MYSQL_USER=nextcloud
+      - MYSQL_PASSWORD=j6VxNssMKgpk3N7Y
+      - MYSQL_HOST=172.17.0.1
+      #- MYSQL_HOST=mariadb
+    labels:
+      - "traefik.default.enable=true"
+      - "traefik.default.frontend.entryPoints=http"
+      - "traefik.default.frontend.rule=HostRegexp:nextcloud.clouddb.myriade.be"
+      - "traefik.default.backend=nextcloud"
+      - "traefik.docker.network=web"
+      - "traefik.port=9000"
+
+volumes:
+  cloud-nextcloud-data:
+    name: cloud-nextcloud-data
+
+networks:
+  web:
+    external: true
+
+
+
